@@ -2,25 +2,22 @@
 
 #include "Window.hpp"
 
-DirectX9::DirectX9(HWND hWnd) {
+DirectX9::DirectX9() {
     // General variables
     this->d3d = nullptr;
     this->d3ddev = nullptr;
-
-    // Call InitD3D
-    this->InitD3D(hWnd);
 }
 
 DirectX9::~DirectX9() {
     this->CleanupD3D();
 }
 
-void DirectX9::InitD3D(HWND hWnd)
+bool DirectX9::InitD3D(HWND hWnd)
 {
     this->d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
     if (!d3d) {
-        throw "Direct3DCreate9 failed";
+        return false;
     }
 
     D3DPRESENT_PARAMETERS d3dpp;
@@ -37,9 +34,10 @@ void DirectX9::InitD3D(HWND hWnd)
         &this->d3ddev))
         )
     {
-        throw "LPDIRECT3D9->CreateDevice failed";
+        return false;
     }
-
+    
+    return true;
 }
 
 void DirectX9::CleanupD3D()

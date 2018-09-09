@@ -5,7 +5,7 @@ unsigned int WindowCount = 0;
 Window::Window(const TCHAR* WndName, 
         UDim2 Size,
         UDim2 Position)
-    : Window::DirectX9(this->hWnd)
+    : Window::DirectX9()
 {
     // General variables
     this->WndName = WndName;
@@ -14,12 +14,13 @@ Window::Window(const TCHAR* WndName,
 
     // Size and position variables
     UDim2 MonitorSize = {(unsigned int)GetSystemMetrics(SM_CXSCREEN), (unsigned int)GetSystemMetrics(SM_CYSCREEN)}; // Primary monitor dimensions
-    (Size.x != -1u && Size.y != -1u) ? this->Size = Size : this->Size = {640, 480};
-    (Position.x != -1u && Position.y != -1u) ? this->Position = Position : 
-        this->Position = {MonitorSize.x - this->Size.x / 2, MonitorSize.y - this->Size.y / 2};
+    (Size.x != (unsigned int)-1 && Size.y != (unsigned int)-1) ? this->Size = Size : this->Size = {640, 480};
+    (Position.x != (unsigned int)-1 && Position.y != (unsigned int)-1) ? this->Position = Position : 
+        this->Position = {MonitorSize.x / 2 - this->Size.x / 2, MonitorSize.y / 2 - this->Size.y / 2};
 
-    // Call InitWindow
-    this->InitWindow();
+    if (this->InitWindow() != true || this->InitD3D(this->hWnd) != true) {
+        delete this;
+    }
 }
 
 Window::~Window()
@@ -27,21 +28,59 @@ Window::~Window()
     WindowCount--;
 }
 
+bool Window::IsOpen()
+{
+    // Up until the following line was implimented,
+    // the window would close, but the program wouldn't
+    // exit. This is because of the Window::PollEvent
+    // MSG issue, see Main().
+    return IsWindowVisible(this->hWnd) == TRUE;
+    //return this->Shown;
+}
+
+bool Window::PollEvent(MSG& event)
+{
+    MSG msg;
+    if (PeekMessage(&msg, this->hWnd, 0u, 0u, PM_REMOVE))
+    {
+        event = msg;
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+        return true;
+    }
+    return false;
+}
+
+void Window::Show(bool Show)
+{
+    int nCmdShow = (Show == true) ? SW_SHOW : SW_HIDE;
+    ShowWindow(this->hWnd, nCmdShow);
+    UpdateWindow(this->hWnd);
+    this->Shown = Show;
+}
+
 void Window::Draw(Drawable* Obj)
 {
     if (Obj != nullptr) {
         this->Objects.push_back(Obj);
-    } else { 
-        throw "Drawable* object was NULL";
     }
 }
 
 void Window::Render()
 {
+    this->d3ddev->Clear(1, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.f, 0);
+    this->d3ddev->BeginScene();
+
     for (std::vector<Drawable*>::iterator Obj = this->Objects.begin(); Obj != this->Objects.end(); Obj++)
     {
-        (*Obj)->Draw(this);
+        (*Obj)->Draw(this->d3ddev);
     }
+
+    this->d3ddev->EndScene();
+    this->d3ddev->Present(NULL, NULL, NULL, NULL);
+
+    // Clear objects to draw for new frame
+    this->Objects.clear();
 }
 
 bool Window::InitWindow()
@@ -49,13 +88,17 @@ bool Window::InitWindow()
     TCHAR* ClassName = new TCHAR[_tcslen(WndClassName) + 3];
     wsprintf(ClassName, _T("%s%03u"), WndClassName, WindowCount);
 
-    WNDCLASS wc = { 0 };
-    wc.lpfnWndProc = (WNDPROC)&this->WindowProc;
+    this->ClassName = ClassName;
+
+    WNDCLASSEX wc;
+    memset(&wc, 0, sizeof(WNDCLASSEX));
+    wc.cbSize = sizeof(WNDCLASSEX);
+    wc.lpfnWndProc = DefWindowProc;
     wc.hInstance = GetModuleHandle(NULL);
     wc.lpszClassName = ClassName;
 
-    if (RegisterClass(&wc) == 0) {
-        throw "RegisterClassA failed";
+    if (RegisterClassEx(&wc) == 0) {
+        return false;
     }
 
     this->hWnd = CreateWindowEx(
@@ -72,19 +115,12 @@ bool Window::InitWindow()
         GetModuleHandle(NULL),
         NULL
     );
-
-    if (this->hWnd == NULL || this->hWnd == INVALID_HANDLE_VALUE) {
-        throw "CreateWindowExW failed";
+    
+    if (this->hWnd == NULL) {
+        return false;
     }
-
-    ShowWindow(this->hWnd, SW_SHOW);
 
     delete[] ClassName;
 
     return true;
-}
-
-LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
