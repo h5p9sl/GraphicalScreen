@@ -3,14 +3,34 @@
 
 #include "Drawable.hpp"
 #include "UDim.hpp"
+//
+//
+//
+//
+#include <stdio.h> // Remove later; debugging
+//
+//
+//
+//
 
-class Window;
-
-class Triangle : public Drawable
+class PrimitiveTriangle : public Drawable
 {
+private:
+    LPDIRECT3DVERTEXBUFFER9 v_buffer;
+    PrimitiveVertex vertices[3];
 public:
-    UDim3 p[3];
-    virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice);
+    PrimitiveTriangle(UDim3f Vertices[3], DWORD Color[3]);
+    PrimitiveTriangle(UDim3f Vertices[3], DWORD Color);
+    PrimitiveTriangle();
+    ~PrimitiveTriangle();
+
+    void SetColor(DWORD Color[3]);
+    void SetColor(DWORD Color);
+    void SetVertices(UDim3f Vertices[3]);
+protected:
+    virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice9);
+public:
+    virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice9);
 };
 
 #endif

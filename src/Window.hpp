@@ -5,7 +5,8 @@
 #include <vector>
 #include "Drawable.hpp"
 #include "DirectX9.hpp"
-
+#include "WndEventMngr.hpp"
+#include <stdio.h> // For debugging
 #define WndClassName _T("h5p9sl_")
 extern unsigned int WindowCount;
 
@@ -22,14 +23,16 @@ private:
     bool Shown;
 public:
     Window(const TCHAR* WndName,
-        UDim2 Size={-1u, -1u},
-        UDim2 Position = {-1u, -1u});
+        UDim2 Size={640, 480});
     ~Window();
     bool IsOpen();
-    bool PollEvent(MSG& event);
+    bool PollEvent(WndEvent& event);
     void Show(bool Show);
+
     void Draw(Drawable* Obj);
+    void Draw(Drawable** ObjArray, unsigned count);
     void Render();
+
     void Close();
 private:
     bool InitWindow();

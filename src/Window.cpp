@@ -3,8 +3,7 @@
 unsigned int WindowCount = 0;
 
 Window::Window(const TCHAR* WndName, 
-        UDim2 Size,
-        UDim2 Position)
+        UDim2 Size)
     : Window::DirectX9()
 {
     // General variables
@@ -12,14 +11,15 @@ Window::Window(const TCHAR* WndName,
     this->Objects.clear();
     WindowCount++;
 
-    // Size and position variables
+    // Set window size
+    this->Size = Size;
+
+    // Set window position to center of screen
     UDim2 MonitorSize = {(unsigned int)GetSystemMetrics(SM_CXSCREEN), (unsigned int)GetSystemMetrics(SM_CYSCREEN)}; // Primary monitor dimensions
-    (Size.x != (unsigned int)-1 && Size.y != (unsigned int)-1) ? this->Size = Size : this->Size = {640, 480};
-    (Position.x != (unsigned int)-1 && Position.y != (unsigned int)-1) ? this->Position = Position : 
-        this->Position = {MonitorSize.x / 2 - this->Size.x / 2, MonitorSize.y / 2 - this->Size.y / 2};
+    this->Position = {MonitorSize.x / 2 - this->Size.x / 2, MonitorSize.y / 2 - this->Size.y / 2};
 
     if (this->InitWindow() != true || this->InitD3D(this->hWnd) != true) {
-        delete this;
+        delete this; // commit suicide
     }
 }
 
@@ -30,24 +30,33 @@ Window::~Window()
 
 bool Window::IsOpen()
 {
-    // Up until the following line was implimented,
-    // the window would close, but the program wouldn't
-    // exit. This is because of the Window::PollEvent
-    // MSG issue, see Main().
     return IsWindowVisible(this->hWnd) == TRUE;
     //return this->Shown;
 }
 
-bool Window::PollEvent(MSG& event)
+bool Window::PollEvent(WndEvent& event)
 {
+    // Perform message translating & dispatching
     MSG msg;
     if (PeekMessage(&msg, this->hWnd, 0u, 0u, PM_REMOVE))
     {
-        event = msg;
         TranslateMessage(&msg);
         DispatchMessage(&msg);
-        return true;
     }
+
+    // Iterate through event queue.
+    for (std::vector<WndEventMngr::WindowEventInfo>::iterator a = WndEventMngr::EventQueue.begin();
+        a != WndEventMngr::EventQueue.end();
+        ++a)
+    {
+        auto i = *a;
+        if (i.hwnd == this->hWnd) {
+            event = i.event;
+            WndEventMngr::EventQueue.erase(a);
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -66,6 +75,16 @@ void Window::Draw(Drawable* Obj)
     }
 }
 
+void Window::Draw(Drawable** ObjArray, unsigned count)
+{
+    for (unsigned i = 0; i < count; i++)
+    {
+        if (ObjArray[i] != nullptr) {
+            this->Objects.push_back(ObjArray[i]);
+        }
+    }
+}
+
 void Window::Render()
 {
     this->d3ddev->Clear(1, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.f, 0);
@@ -79,7 +98,7 @@ void Window::Render()
     this->d3ddev->EndScene();
     this->d3ddev->Present(NULL, NULL, NULL, NULL);
 
-    // Clear objects to draw for new frame
+    // Clear object list for new frame
     this->Objects.clear();
 }
 
@@ -89,13 +108,15 @@ bool Window::InitWindow()
     wsprintf(ClassName, _T("%s%03u"), WndClassName, WindowCount);
 
     this->ClassName = ClassName;
+    printf("Intializing window class \"%s\"\n", ClassName);
 
     WNDCLASSEX wc;
     memset(&wc, 0, sizeof(WNDCLASSEX));
     wc.cbSize = sizeof(WNDCLASSEX);
-    wc.lpfnWndProc = DefWindowProc;
+    wc.lpfnWndProc = WndEventMngr::GlobalWindowProc;
     wc.hInstance = GetModuleHandle(NULL);
     wc.lpszClassName = ClassName;
+    wc.hbrBackground = NULL;
 
     if (RegisterClassEx(&wc) == 0) {
         return false;
