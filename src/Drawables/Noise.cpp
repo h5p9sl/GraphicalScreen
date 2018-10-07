@@ -22,6 +22,11 @@ Noise::~Noise()
 void Noise::Initialize(LPDIRECT3DDEVICE9 dev)
 {
     this->initialized = true;
+    for (auto i = pixels.begin(); i != pixels.end(); ++i)
+    {
+        DWORD colors[] = { 0xFFFF0000, 0xFF00FF00, 0xFF0000FF, 0xFFFFFF00, 0xFF00FFFF, 0xFFFF00FF, 0xFFFFFF };
+        i->SetColor(colors[rand() % 7]);
+    }
 }
 
 void Noise::Draw(LPDIRECT3DDEVICE9 dev)
@@ -34,7 +39,6 @@ void Noise::Draw(LPDIRECT3DDEVICE9 dev)
         randompos.x = rand() % (unsigned)this->Size.x + (unsigned)this->Origin.x;
         randompos.y = rand() % (unsigned)this->Size.y + (unsigned)this->Origin.y;
         i->SetPosition(randompos);
-        i->SetColor(D3DCOLOR_XRGB(rand() % 255, rand() % 255, rand() % 255));
         i->Draw(dev);
     }
 

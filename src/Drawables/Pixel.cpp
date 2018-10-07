@@ -1,5 +1,10 @@
 #include "Pixel.hpp"
 
+Pixel::Pixel()
+{
+    Pixel(UDim2f(), DWORD());
+}
+
 Pixel::Pixel(UDim2f v, DWORD c)
 {
     this->SetColor(c);

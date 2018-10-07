@@ -28,6 +28,18 @@ Window::~Window()
     WindowCount--;
 }
 
+UDim2 Window::GetCursorPos()
+{
+    POINT p = { 0, 0 };
+    if (ScreenToClient(this->hWnd, &p)) {
+        // p is always equal to { -328, 302 } for some fuckin reason
+        // TODO: Fix this
+        printf("%04i, %04i\n", p.x, p.y);
+        return UDim2(p.x, p.y);
+    }
+    return UDim2();
+}
+
 bool Window::IsOpen()
 {
     return IsWindowVisible(this->hWnd) == TRUE;
@@ -100,6 +112,11 @@ void Window::Render()
 
     // Clear object list for new frame
     this->Objects.clear();
+}
+
+void Window::Close()
+{
+    this->Show(false);
 }
 
 bool Window::InitWindow()

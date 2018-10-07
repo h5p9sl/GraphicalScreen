@@ -25,6 +25,11 @@ public:
     Window(const TCHAR* WndName,
         UDim2 Size={640, 480});
     ~Window();
+public:
+    UDim2 GetCursorPos();
+    UDim2 GetPosition();    // TODO
+    UDim2 GetSize();        // TODO
+public:
     bool IsOpen();
     bool PollEvent(WndEvent& event);
     void Show(bool Show);

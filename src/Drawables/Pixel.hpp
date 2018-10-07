@@ -1,8 +1,8 @@
 #ifndef Pixel_hpp
 #define Pixel_hpp
 
-#include "Drawable.hpp"
-#include "UDim.hpp"
+#include "../Engine/Drawable.hpp"
+#include "../UDim.hpp"
 
 class Pixel : public Drawable
 {
@@ -10,6 +10,7 @@ private:
     LPDIRECT3DVERTEXBUFFER9 v_buffer;
     PrimitiveVertex vertices;
 public:
+    Pixel();
     Pixel(UDim2f v, DWORD c);
     ~Pixel();
 public:

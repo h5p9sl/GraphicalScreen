@@ -1,7 +1,7 @@
 #ifndef DirectX9_hpp
 #define DirectX9_hpp
 #include <d3d9.h>
-#include "UDim.hpp"
+#include "../UDim.hpp"
 
 #pragma comment(lib, "d3d9.lib")
 
