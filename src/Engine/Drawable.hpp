@@ -1,7 +1,7 @@
 #ifndef Drawable_hpp
 #define Drawable_hpp
 
-#include "UDim.hpp"
+#include "../UDim.hpp"
 #include <d3d9.h>
 
 class Window;

@@ -1,7 +1,7 @@
-#include "../Engine/Window.hpp"
-#include "Noise.hpp"
-#include "../Engine/Graphics/PrimitiveRectangle.hpp"
-#include "Bouncy2D.hpp"
+#include "Engine/Window.hpp"
+#include "Drawables/Noise.hpp"
+#include "Drawables/PrimitiveRectangle.hpp"
+#include "Drawables/Bouncy2D.hpp"
 
 #include <stdio.h>
 #include <chrono>

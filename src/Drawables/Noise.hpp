@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "../Engine/Drawable.hpp"
-#include "../Engine/UDim.hpp"
-#include "../Engine/Graphics/Pixel.hpp"
+#include "../UDim.hpp"
+#include "Pixel.hpp"
 
 class Noise : public Drawable
 {
