@@ -12,8 +12,12 @@ private:
 public:
     Pixel(UDim2f v, DWORD c);
     ~Pixel();
+public:
+    void SetColor(DWORD color);
+    void SetPosition(UDim2f position);
 protected:
     virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice);
+    virtual void UpdateVertices();
 public:
     virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice);
 };

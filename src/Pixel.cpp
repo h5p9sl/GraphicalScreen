@@ -2,16 +2,30 @@
 
 Pixel::Pixel(UDim2f v, DWORD c)
 {
-    this->vertices.vertex.x = v.x;
-    this->vertices.vertex.y = v.y;
-    this->vertices.vertex.z = 0.f;
-    this->vertices.color = c;
-    this->vertices.rhs = 1.f;
+    this->SetColor(c);
+    this->SetPosition(v);
 }
 
 Pixel::~Pixel()
 {
-    this->v_buffer->Release();
+    /*I had to add this line because of some weird bug caused
+    during Noise class initialization, which causes the Pixel's
+    destructor to get called... TODO: Investigate this meme.*/
+    if (this->initialized)
+        this->v_buffer->Release();
+}
+
+void Pixel::SetColor(DWORD color)
+{
+    this->vertices.color = color;
+    this->vertices.rhs = 1.f;
+}
+
+void Pixel::SetPosition(UDim2f position)
+{
+    this->vertices.vertex.x = position.x;
+    this->vertices.vertex.y = position.y;
+    this->vertices.vertex.z = 0.f;
 }
 
 void Pixel::Initialize(LPDIRECT3DDEVICE9 dev)
@@ -26,7 +40,10 @@ void Pixel::Initialize(LPDIRECT3DDEVICE9 dev)
         &this->v_buffer,
         NULL
     );
-    
+}
+
+void Pixel::UpdateVertices()
+{
     if (v_buffer) {
         v_buffer->Lock(0, sizeof(vertices), &pBuffer, 0);
         memcpy(pBuffer, &vertices, sizeof(vertices));
@@ -39,6 +56,8 @@ void Pixel::Draw(LPDIRECT3DDEVICE9 dev)
     if (!this->initialized)
         this->Initialize(dev);
     
+    UpdateVertices();
+
     dev->SetFVF(PrimitiveVertexFVF);
 
     dev->SetStreamSource(0, this->v_buffer, 0, sizeof(PrimitiveVertex));
