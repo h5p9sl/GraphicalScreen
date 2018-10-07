@@ -1,6 +1,7 @@
 #include "Window.hpp"
 
 #include "Pixel.hpp"
+#include "Noise.hpp"
 
 #include <stdio.h>
 #include <chrono>
@@ -12,7 +13,7 @@ int main(void)
     Window window(_T("Direct3D Window"));
     window.Show(true);
     
-    Pixel pixel({25.f, 25.f}, D3DCOLOR_XRGB(255,0,0));
+    Noise noise({ 0.f, 0.f }, { 640, 480 }, 20000);
 
     auto time_start = clock::now();
 
@@ -33,7 +34,7 @@ int main(void)
             }
         }
         
-        window.Draw(&pixel);
+        window.Draw(&noise);
 
         window.Render();
         Sleep(5);
