@@ -3,31 +3,26 @@
 
 #include "../Engine/Drawable.hpp"
 #include "../UDim.hpp"
-//
-//
-//
-//
-#include <stdio.h> // Remove later; debugging
-//
-//
-//
-//
+#include <stdio.h>
 
 class PrimitiveTriangle : public Drawable
 {
 private:
-    LPDIRECT3DVERTEXBUFFER9 v_buffer;
     PrimitiveVertex vertices[3];
 public:
-    PrimitiveTriangle(UDim3f Vertices[3], DWORD Color[3]);
-    PrimitiveTriangle(UDim3f Vertices[3], DWORD Color);
+    UDim2f Position;
+    UDim2f Size;
+public:
     PrimitiveTriangle();
+    PrimitiveTriangle(UDim2f Position, UDim2f Size, DWORD Color = D3DCOLOR_XRGB(255,255,255));
     ~PrimitiveTriangle();
-
+public:
     void SetColor(DWORD Color[3]);
     void SetColor(DWORD Color);
-    void SetVertices(UDim3f Vertices[3]);
 protected:
+    void SetVertices(UDim2f Vertices[3]);
+protected:
+    void UpdateVertices();
     virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice);
 public:
     virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice);

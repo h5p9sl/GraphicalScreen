@@ -50,6 +50,7 @@ void Pixel::Initialize(LPDIRECT3DDEVICE9 dev)
 void Pixel::UpdateVertices()
 {
     if (v_buffer) {
+        void* pBuffer;
         v_buffer->Lock(0, sizeof(vertices), &pBuffer, 0);
         memcpy(pBuffer, &vertices, sizeof(vertices));
         v_buffer->Unlock();

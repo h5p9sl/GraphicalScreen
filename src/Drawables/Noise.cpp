@@ -2,8 +2,8 @@
 
 Noise::Noise(UDim2f pos, UDim2f size, unsigned count)
 {
-    this->Origin = { pos.x, pos.y, 0 };
-    this->Size = { size.x, size.y, 0 };
+    this->Position = pos.x, pos.y;
+    this->Size = size.x, size.y;
 
     for (unsigned i = 0; i < count; i++)
     {
@@ -36,8 +36,8 @@ void Noise::Draw(LPDIRECT3DDEVICE9 dev)
     for (auto i = pixels.begin(); i != pixels.end(); ++i)
     {
         UDim2f randompos;
-        randompos.x = rand() % (unsigned)this->Size.x + (unsigned)this->Origin.x;
-        randompos.y = rand() % (unsigned)this->Size.y + (unsigned)this->Origin.y;
+        randompos.x = rand() % (unsigned)this->Size.x + (unsigned)this->Position.x;
+        randompos.y = rand() % (unsigned)this->Size.y + (unsigned)this->Position.y;
         i->SetPosition(randompos);
         i->Draw(dev);
     }
