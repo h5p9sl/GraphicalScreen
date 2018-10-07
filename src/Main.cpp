@@ -1,30 +1,40 @@
 #include "Window.hpp"
 
-#include "Triangle.hpp"
+#include "Pixel.hpp"
 
 #include <stdio.h>
+#include <chrono>
 
 int main(void)
 {
+    using clock = std::chrono::high_resolution_clock;
+
     Window window(_T("Direct3D Window"));
     window.Show(true);
     
-    UDim3f v[3] = { {320.f, 50.f, 0.5f}, {590.f, 420.f, 0.5f}, {50.f, 420.f, 0.5f} };
-    DWORD c[3] = {0xffff0000, 0xff00ff00, 0xff0000ff};
-    PrimitiveTriangle triangle(v, c);
+    Pixel pixel({25.f, 25.f}, D3DCOLOR_XRGB(255,0,0));
+
+    auto time_start = clock::now();
 
     // While main window is open
     while (window.IsOpen())
     {
+        auto delta = clock::now() - time_start;
+        time_start = clock::now();
+
+        float fdelta = std::chrono::duration_cast<std::chrono::milliseconds>(delta).count() / 1000.f;
+
+        printf("%f\n", fdelta);
+
         WndEvent msg;
         while (window.PollEvent(msg)) {
             if (msg == WndEvent::MSG_CLOSE) {
                 window.Show(false);
             }
         }
-
-        window.Draw(&triangle);
         
+        window.Draw(&pixel);
+
         window.Render();
         Sleep(5);
     }

@@ -1,6 +1,8 @@
 #ifndef Triangle_hpp
 #define Triangle_hpp
 
+#include "PrimitiveTriangle.hpp"
+#include "Object.hpp"
 #include "Drawable.hpp"
 #include "UDim.hpp"
 //
@@ -13,24 +15,15 @@
 //
 //
 
-class PrimitiveTriangle : public Drawable
+class Triangle : private PrimitiveTriangle, public Object
 {
-private:
-    LPDIRECT3DVERTEXBUFFER9 v_buffer;
-    PrimitiveVertex vertices[3];
 public:
-    PrimitiveTriangle(UDim3f Vertices[3], DWORD Color[3]);
-    PrimitiveTriangle(UDim3f Vertices[3], DWORD Color);
-    PrimitiveTriangle();
-    ~PrimitiveTriangle();
-
-    void SetColor(DWORD Color[3]);
-    void SetColor(DWORD Color);
-    void SetVertices(UDim3f Vertices[3]);
+    Triangle();
+    ~Triangle();
 protected:
-    virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice9);
+    virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice);
 public:
-    virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice9);
+    virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice);
 };
 
 #endif

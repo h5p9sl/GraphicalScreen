@@ -3,6 +3,8 @@
 #include <d3d9.h>
 #include "UDim.hpp"
 
+#pragma comment(lib, "d3d9.lib")
+
 class Window;
 
 class DirectX9

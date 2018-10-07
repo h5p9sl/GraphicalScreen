@@ -104,18 +104,18 @@ void Window::Render()
 
 bool Window::InitWindow()
 {
-    TCHAR* ClassName = new TCHAR[_tcslen(WndClassName) + 3];
-    wsprintf(ClassName, _T("%s%03u"), WndClassName, WindowCount);
+    TCHAR* ClassName_t = new TCHAR[_tcslen(WndClassName) + 3];
+    wsprintf(ClassName_t, _T("%s%03u"), WndClassName, WindowCount);
+    this->ClassName = ClassName_t;
 
-    this->ClassName = ClassName;
-    printf("Intializing window class \"%s\"\n", ClassName);
+    printf("Intializing window class \"%s\"\n", this->ClassName);
 
     WNDCLASSEX wc;
     memset(&wc, 0, sizeof(WNDCLASSEX));
     wc.cbSize = sizeof(WNDCLASSEX);
     wc.lpfnWndProc = WndEventMngr::GlobalWindowProc;
     wc.hInstance = GetModuleHandle(NULL);
-    wc.lpszClassName = ClassName;
+    wc.lpszClassName = this->ClassName;
     wc.hbrBackground = NULL;
 
     if (RegisterClassEx(&wc) == 0) {
@@ -124,7 +124,7 @@ bool Window::InitWindow()
 
     this->hWnd = CreateWindowEx(
         0,
-        ClassName,
+        this->ClassName,
         this->WndName,
         WS_OVERLAPPEDWINDOW,
         this->Position.x,
@@ -140,8 +140,6 @@ bool Window::InitWindow()
     if (this->hWnd == NULL) {
         return false;
     }
-
-    delete[] ClassName;
 
     return true;
 }

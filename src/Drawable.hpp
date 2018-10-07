@@ -16,6 +16,9 @@ struct PrimitiveVertex
 
 class Drawable
 {
+public:
+    UDim3f Origin;
+    UDim3f Size;
 protected:
     void* pBuffer;
     bool initialized = false;
