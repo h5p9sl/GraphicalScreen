@@ -2,6 +2,5 @@
 
 Drawable::~Drawable()
 {
-    this->initialized = false;
-    this->v_buffer->Release();
+    if (this->v_buffer) this->v_buffer->Release();
 }

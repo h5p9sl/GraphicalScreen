@@ -1,19 +1,23 @@
-#include "Drawable.hpp"
+#ifndef Bouncy2D_hpp
+#define Bouncy2D_hpp
+
+#include "../Engine/Drawable.hpp"
 
 class Bouncy2D : public Drawable
 {
 private:
-    UDim2f Velocity;
-    UDim2f Position;
-    UDim2f Size;
     Drawable* pDrawableChild;
 public:
-    Bouncy2D(Drawable* obj, UDim2f Size, UDim2f Position);
+    UDim2f Velocity;
+public:
+    Bouncy2D(Drawable* obj, UDim2f Position, UDim2f Size);
     ~Bouncy2D();
 public:
     void Update(float fdelta);
 protected:
-    virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice) = 0; // Not needed
+    virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice);
 public:
     virtual void Draw(LPDIRECT3DDEVICE9 D3DDevice);
 };
+
+#endif

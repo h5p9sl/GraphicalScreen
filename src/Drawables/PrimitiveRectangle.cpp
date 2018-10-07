@@ -38,11 +38,11 @@ void PrimitiveRectangle::UpdateVertices()
     if (!this->v_buffer) return;
     // Update vertice positions
     UDim2f v[5];
-    v[0] = { Position };
-    v[1] = { Position.x + Size.x, Position.y };
-    v[2] = { Position.x + Size.x, Position.y + Size.y };
-    v[3] = { Position.x, Position.y + Size.y };
-    v[4] = { Position };
+    v[0] = { Position.x,            Position.y          };
+    v[1] = { Position.x + Size.x,   Position.y          };
+    v[2] = { Position.x + Size.x,   Position.y + Size.y };
+    v[3] = { Position.x,            Position.y + Size.y };
+    v[4] = { Position.x,            Position.y          };
     this->SetVertices(v);
 
     // Update vertex buffer

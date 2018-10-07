@@ -10,9 +10,6 @@ class PrimitiveTriangle : public Drawable
 private:
     PrimitiveVertex vertices[3];
 public:
-    UDim2f Position;
-    UDim2f Size;
-public:
     PrimitiveTriangle();
     PrimitiveTriangle(UDim2f Position, UDim2f Size, DWORD Color = D3DCOLOR_XRGB(255,255,255));
     ~PrimitiveTriangle();

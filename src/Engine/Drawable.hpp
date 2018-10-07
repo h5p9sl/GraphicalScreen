@@ -20,6 +20,9 @@ protected:
     LPDIRECT3DVERTEXBUFFER9 v_buffer = nullptr;
     bool initialized = false;
 public:
+    UDim2f Position;
+    UDim3f Size;
+public:
     ~Drawable();
 protected:
     virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice) = 0;

@@ -51,6 +51,13 @@ UDim3::UDim3(UDim3f v)
     this->z = v.z;
 }
 
+UDim3::UDim3(UDim2 v)
+{
+    this->x = v.x;
+    this->y = v.y;
+    this->z = 0;
+}
+
 UDim3::UDim3(unsigned x, unsigned y, unsigned z)
 {
     this->x = x;
@@ -75,6 +82,13 @@ UDim3f::UDim3f(UDim3 v)
     this->x = v.x;
     this->y = v.y;
     this->z = v.z;
+}
+
+UDim3f::UDim3f(UDim2f v)
+{
+    this->x = v.x;
+    this->y = v.y;
+    this->z = 0.f;
 }
 
 UDim3f::UDim3f(float x, float y, float z)

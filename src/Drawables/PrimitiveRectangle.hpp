@@ -11,9 +11,6 @@ class PrimitiveRectangle : public Drawable
 private:
     PrimitiveVertex vertices[5];
 public:
-    UDim2f Position;
-    UDim2f Size;
-public:
     PrimitiveRectangle();
     PrimitiveRectangle(UDim2f Position, UDim2f Size, DWORD Color = D3DCOLOR_XRGB(255,255,255));
     ~PrimitiveRectangle();
