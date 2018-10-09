@@ -19,7 +19,9 @@ class Drawable
 protected:
     bool initialized = false;
 public:
-    UDim2f Position;
+    UDim3f Origin;
+    UDim3f Position;
+    UDim3f Rotation;
     UDim3f Size;
 public:
     ~Drawable();
