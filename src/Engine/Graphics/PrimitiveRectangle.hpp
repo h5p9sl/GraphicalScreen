@@ -9,6 +9,7 @@
 class PrimitiveRectangle : public Drawable
 {
 private:
+    LPDIRECT3DVERTEXBUFFER9 v_buffer = nullptr;
     PrimitiveVertex vertices[5];
 public:
     PrimitiveRectangle();

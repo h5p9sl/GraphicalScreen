@@ -17,7 +17,6 @@ struct PrimitiveVertex
 class Drawable
 {
 protected:
-    LPDIRECT3DVERTEXBUFFER9 v_buffer = nullptr;
     bool initialized = false;
 public:
     UDim2f Position;
