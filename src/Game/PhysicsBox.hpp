@@ -1,9 +1,12 @@
 #pragma once
 
+#include "../Engine/Drawable.hpp"
 #include "../Engine/Graphics/PrimitiveRectangle.hpp"
 
-class PhysicsBox : public PrimitiveRectangle
+class PhysicsBox : public Drawable
 {
+private:
+    PrimitiveRectangle* rectangleChild;
 public:
     PhysicsBox();
     ~PhysicsBox();
