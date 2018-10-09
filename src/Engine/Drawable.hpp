@@ -23,8 +23,6 @@ public:
     UDim3f Position;
     UDim3f Rotation;
     UDim3f Size;
-public:
-    ~Drawable();
 protected:
     virtual void Initialize(LPDIRECT3DDEVICE9 D3DDevice) = 0;
 public:
